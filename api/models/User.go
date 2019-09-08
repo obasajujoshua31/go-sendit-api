@@ -1,7 +1,9 @@
 package models
 
 import (
+	"errors"
 	"sendit-api/api/security"
+	"strings"
 	"time"
 )
 
@@ -22,3 +24,28 @@ func (u *User) BeforeSave() error {
 	u.Password = string(hashPassword)
 	return nil
 }
+
+func (u *User) Validate(action string) error {
+	switch strings.ToLower(action) {
+	case "login":
+		if u.Email == "" {
+			return errors.New("Required Email")
+		}
+		if u.Password == "" {
+			return errors.New("Required Password")
+		}
+		return nil
+	default:
+		if u.Name == "" {
+			return errors.New("Required Email")
+		}
+		if u.Email == "" {
+			return errors.New("Required Email")
+		}
+		if u.Password == "" {
+			return errors.New("Required Password")
+		}
+		return nil
+	}
+}
+

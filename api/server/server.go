@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sendit-api/api/config"
+	"sendit-api/api/database"
 	"sendit-api/api/router"
 
 	"github.com/gorilla/mux"
@@ -11,12 +13,14 @@ import (
 )
 
 func Start() {
+	config.Load()
+	database.MigrateAndSeed()
 	fmt.Println("Server started at port 7000")
-	Listen()
+	Listen(config.PORT)
 }
 
-func Listen() {
+func Listen(port int) {
 	r := mux.NewRouter()
 	router.SetupRoutes(r)
-	log.Fatal(http.ListenAndServe(":7000", httplogger.Golog(r)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), httplogger.Golog(r)))
 }
